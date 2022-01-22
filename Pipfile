@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = "*"
+numpy = "*"
+fastapi = "*"
+uvicorn = "*"
+sqlalchemy = "*"
+api = {editable = true, path = "."}
+pymysql = "*"
+cryptography = "*"
+orjson = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+requests = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
