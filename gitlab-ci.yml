@@ -1,0 +1,65 @@
+stages:
+  # CI pipeline
+  # test pass -> 
+  #   merge stage/master -> 
+  #   build docker image ->
+  #   deploy 
+  # test -> build -> deploy
+  - test
+  - build
+  - deploy
+
+#CI name
+test-api: 
+    #set CI pipeline steps
+    stage: test
+    image: python:3.9
+    before_script:
+      - pip install pipenv
+      - pipenv sync
+      - python3 genenv.py
+    script:
+      # 實際測試指令
+      pipenv run pytest --cov-report term-missing --cov-config=.coveragerc --cov=./api/ tests/
+    only:
+        # 設定只有在 merge requests 的情況下
+        # 才會運作此 CI
+        refs:
+          - merge_requests
+
+# CI 名稱, 建立 docker image
+build-docker-image:
+    # 在 stage 設定 CI pipeline 順序
+    # 這裡 pipeline 步驟是 build
+    stage: build
+    before_script:
+      # 由於 build 好 image 後，需要 push 到 docker hub
+      - docker login -u "bruceewue" -p ${DOCKER_HUB_TOKEN}
+    script: 
+      # 建立 image
+      - make build-image
+      # push
+      - make push-image
+    tags:
+      # 設定使用前面建立的 runner 執行
+      - build_image
+    only:
+      # 設定只有在下 tag 後
+      # 才會 build image
+      - tags 
+
+# CI 名稱, deploy api 
+deploy-api:
+    # 在 stage 設定 CI pipeline 順序
+    # 這裡 pipeline 步驟是 deply
+    stage: deploy
+    script:
+      # 部屬 api
+      - make deploy-api
+    tags:
+      # 設定使用前面建立的 runner 執行
+      - build_image
+    only:
+      # 設定只有在下 tag 後
+      # 才會 deploy
+      - tags 
