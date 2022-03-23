@@ -152,3 +152,4 @@ cython_debug/
 #.idea/
 .gitsecret/keys/random_seed
 local.ini
+api/config.py
