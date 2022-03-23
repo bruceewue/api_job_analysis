@@ -27,24 +27,26 @@ def test_get_mysql_jobdata_conn():
 
 # 測試對 'http://127.0.0.1:5000/' 頁面發送 request,
 # 得到的回應 response 的狀態 status_code, json data
-def test_read_root():
+def test_index():
     response = client.get("/")
     assert response.status_code == 200
     # assert response.json() == {
     #     "Hello": "World"
     # }
-    assert response == HTMLResponse(
-        content=(
-            "<html>"
-            "<body style='padding: 10px;'>"
-            "<h1>Welcome to the API - Job Analysis</h1>"
-            "<div>"
-            "Check the docs: <a href='/docs'>here</a>"
-            "</div>"
-            "</body>"
-            "</html>"
-        )
-    )
+    res_content=res_content="<html><body style='padding: 10px;'><h1>Welcome to the API - Job Analysis</h1><div>Check the docs: <a href='/docs'>here</a></div></body></html>"
+    assert response.text == res_content
+    # assert response == HTMLResponse(
+    #     content=(
+    #         "<html>"
+    #         "<body style='padding: 10px;'>"
+    #         "<h1>Welcome to the API - Job Analysis</h1>"
+    #         "<div>"
+    #         "Check the docs: <a href='/docs'>here</a>"
+    #         "</div>"
+    #         "</body>"
+    #         "</html>"
+    #     )
+    # )
 
 
 # 測試對 'http://127.0.0.1:5000/api/v1/indeed' 頁面發送 request,
@@ -97,7 +99,7 @@ def setUp():
 
 # 測試對 api 發送 requests,
 # assert 回傳結果是 {"Hello": "World"}
-def test_index(setUp):
+def test_root(setUp):
     response = requests.get("http://127.0.0.1:5000")
     # assert response.json() == {
     #     "Hello": "World"
